@@ -1,65 +1,89 @@
-import Image from "next/image";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { ShieldAlert, Terminal, Activity, Lock } from "lucide-react"
 
-export default function Home() {
+export default function Dashboard() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+    <div className="space-y-6">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <Card className="bg-card border-border">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-xs font-medium uppercase tracking-tighter">Total Threats Blocked</CardTitle>
+            <ShieldAlert className="h-4 w-4 text-primary" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-primary">1,284</div>
+            <p className="text-xs text-muted-foreground">+20.1% from last month</p>
+          </CardContent>
+        </Card>
+        <Card className="bg-card border-border">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-xs font-medium uppercase tracking-tighter">Active System Scans</CardTitle>
+            <Activity className="h-4 w-4 text-primary" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-primary">12</div>
+            <p className="text-xs text-muted-foreground">3 high priority</p>
+          </CardContent>
+        </Card>
+        <Card className="bg-card border-border">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-xs font-medium uppercase tracking-tighter">Vulnerabilities Found</CardTitle>
+            <Terminal className="h-4 w-4 text-primary" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-destructive">42</div>
+            <p className="text-xs text-muted-foreground">Action required: 8</p>
+          </CardContent>
+        </Card>
+        <Card className="bg-card border-border">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-xs font-medium uppercase tracking-tighter">Encrypted Nodes</CardTitle>
+            <Lock className="h-4 w-4 text-primary" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-primary">100%</div>
+            <p className="text-xs text-muted-foreground">All systems secure</p>
+          </CardContent>
+        </Card>
+      </div>
+
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
+        <Card className="md:col-span-4 bg-card border-border">
+          <CardHeader>
+            <CardTitle className="text-sm font-bold uppercase tracking-widest text-primary">System_Logs::Recent_Activity</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4 font-mono text-sm">
+              {[
+                "[14:23:01] Unauthorized access attempt detected at node: 192.168.1.104",
+                "[14:22:45] Firewall rules updated successfully.",
+                "[14:20:12] Weekly security audit initiated by user: ROOT",
+                "[14:18:55] Vulnerability patch deployed to production cluster.",
+                "[14:15:30] Backup sequence completed for DB_PRODUCTION.",
+              ].map((log, i) => (
+                <div key={i} className="flex gap-2">
+                  <span className="text-muted-foreground whitespace-nowrap">{log.split(']')[0]}]</span>
+                  <span className="text-foreground">{log.split(']')[1]}</span>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+        <Card className="md:col-span-3 bg-card border-border">
+          <CardHeader>
+            <CardTitle className="text-sm font-bold uppercase tracking-widest text-primary">Threat_Vector_Map</CardTitle>
+          </CardHeader>
+          <CardContent className="flex flex-col items-center justify-center h-[200px]">
+            <div className="w-full h-full border border-dashed border-border rounded flex items-center justify-center relative overflow-hidden bg-black/50">
+               <div className="absolute inset-0 flex items-center justify-center opacity-20">
+                 <div className="w-32 h-32 border-2 border-primary rounded-full animate-ping" />
+                 <div className="w-16 h-16 border-2 border-primary rounded-full animate-pulse absolute" />
+               </div>
+               <span className="text-xs text-muted-foreground font-mono animate-pulse">SCANNING_GEOLOCATION...</span>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     </div>
-  );
+  )
 }
