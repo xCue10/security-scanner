@@ -3,6 +3,7 @@ nixPkgs = ["...", "nmap", "semgrep", "nuclei", "subfinder", "trivy"]
 
 [phases.build]
 cmds = ["npm run build"]
+dependsOn = ["setup"]
 
 [phases.start]
 cmd = "npm start"
