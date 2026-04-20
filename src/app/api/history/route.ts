@@ -1,12 +1,9 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
+import { NextResponse } from 'next/server';
+import { readData } from '@/lib/storage';
 
 export async function GET() {
   try {
-    const history = await prisma.scanRecord.findMany({
-      orderBy: { createdAt: 'desc' },
-      take: 100
-    });
+    const history = readData('scan-records');
     return NextResponse.json(history);
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
