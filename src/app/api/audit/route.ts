@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
       }
 
       const results = JSON.parse(stdout);
-      return NextResponse.json({
+      const auditData = {
         summary: {
           total_findings: results.results?.length || 0,
           errors: results.errors?.length || 0
@@ -42,7 +42,19 @@ export async function POST(req: NextRequest) {
           message: f.extra.message,
           severity: f.extra.severity
         })) || []
+      };
+
+      // PERSIST TO FILE STORAGE
+      const { storage } = require('@/lib/storage');
+      storage.addRecord({
+        type: 'CODE',
+        target: 'PROJECT_ROOT',
+        status: 'COMPLETED',
+        data: JSON.stringify(auditData),
+        severity: auditData.summary.total_findings > 0 ? 'MEDIUM' : 'CLEAN'
       });
+
+      return NextResponse.json(auditData);
 
     } catch (execError: any) {
       console.error('Semgrep Exec Error:', execError);
