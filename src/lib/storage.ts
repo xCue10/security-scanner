@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 
 // Use /app-data for production (Railway volume), fall back to local .data for dev
-const DATA_DIR = process.env.DATA_DIR || (process.env.NODE_ENV === 'production' ? '/app-data' : path.join(process.cwd(), '.data'));
+const DATA_DIR = process.env.DATA_DIR || (process.env.NODE_ENV === 'production' ? '/app-data' : path.join(/*turbopackIgnore: true*/ process.cwd(), '.data'));
 
 // Ensure the data directory exists
 if (!fs.existsSync(DATA_DIR)) {
