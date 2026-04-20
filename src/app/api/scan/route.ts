@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { exec } from 'child_process';
 import { promisify } from 'util';
 import { parseStringPromise } from 'xml2js';
-import { prisma } from '@/lib/prisma';
+import { storage } from '@/lib/storage';
 
 const execAsync = promisify(exec);
 
@@ -40,15 +40,13 @@ export async function POST(req: NextRequest) {
         ports: ports
       };
 
-      // PERSIST TO DATABASE
-      await prisma.scanRecord.create({
-        data: {
-          type: 'NETWORK',
-          target: sanitizedTarget,
-          status: 'COMPLETED',
-          data: JSON.stringify(scanData),
-          severity: ports.length > 0 ? 'LOW' : 'CLEAN'
-        }
+      // PERSIST TO FILE STORAGE
+      storage.addRecord({
+        type: 'NETWORK',
+        target: sanitizedTarget,
+        status: 'COMPLETED',
+        data: scanData,
+        severity: ports.length > 0 ? 'LOW' : 'CLEAN'
       });
 
       return NextResponse.json(scanData);
