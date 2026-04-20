@@ -1,0 +1,28 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model ScanRecord {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  type      String   // "NETWORK", "CODE", "PENTEST", "RECON"
+  target    String
+  status    String   // "COMPLETED", "FAILED"
+  data      Json     // The raw scan results
+  summary   String?  // AI Generated Executive Summary
+  severity  String?  // "CLEAN", "LOW", "MEDIUM", "HIGH", "CRITICAL"
+}
+
+model DiscoveredAsset {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  domain    String   @unique
+  ip        String?
+  source    String   // "SUBFINDER", "MANUAL"
+  lastSeen  DateTime @updatedAt
+}

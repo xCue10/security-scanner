@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { exec } from 'child_process';
 import { promisify } from 'util';
 import { parseStringPromise } from 'xml2js';
+import { prisma } from '@/lib/prisma';
 
 const execAsync = promisify(exec);
 
@@ -13,12 +14,8 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Target IP or hostname is required' }, { status: 400 });
     }
 
-    // Basic validation to prevent command injection
     const sanitizedTarget = target.replace(/[^a-zA-Z0-9.-]/g, '');
 
-    // Execute nmap with XML output
-    // -F: Fast mode (scan fewer ports)
-    // -oX -: Output to stdout in XML format
     try {
       const { stdout, stderr } = await execAsync(`nmap -F -oX - ${sanitizedTarget}`);
       
@@ -26,43 +23,41 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ error: `Nmap Error: ${stderr}` }, { status: 500 });
       }
 
-      // Parse XML to JSON
       const result = await parseStringPromise(stdout);
-
-      // Extract meaningful data
       const host = result.nmaprun.host?.[0];
-      if (!host) {
-        return NextResponse.json({ 
-          message: 'No host found or host is down',
-          raw: result 
-        });
-      }
-
-      const ports = host.ports?.[0]?.port?.map((p: any) => ({
+      
+      const ports = host?.ports?.[0]?.port?.map((p: any) => ({
         portid: p.$.portid,
         protocol: p.$.protocol,
         state: p.state?.[0]?.$.state,
         service: p.service?.[0]?.$.name
       })) || [];
 
-      return NextResponse.json({
+      const scanData = {
         target: sanitizedTarget,
-        status: host.status?.[0]?.$.state,
-        address: host.address?.[0]?.$.addr,
+        status: host?.status?.[0]?.$.state || 'down',
+        address: host?.address?.[0]?.$.addr || 'unknown',
         ports: ports
+      };
+
+      // PERSIST TO DATABASE
+      await prisma.scanRecord.create({
+        data: {
+          type: 'NETWORK',
+          target: sanitizedTarget,
+          status: 'COMPLETED',
+          data: scanData,
+          severity: ports.length > 0 ? 'LOW' : 'CLEAN'
+        }
       });
 
+      return NextResponse.json(scanData);
+
     } catch (execError: any) {
-      if (execError.message.includes('not recognized')) {
-        return NextResponse.json({ 
-          error: 'Nmap is not installed on the server. Please install Nmap to use this feature.' 
-        }, { status: 501 });
-      }
-      throw execError;
+      return NextResponse.json({ error: 'Scanner execution failed.' }, { status: 501 });
     }
 
   } catch (error: any) {
-    console.error('Scan Error:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
