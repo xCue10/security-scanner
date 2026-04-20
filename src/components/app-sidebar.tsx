@@ -8,6 +8,7 @@ import {
   Map,
   LayoutDashboard,
   FileCode,
+  Zap,
 } from "lucide-react"
 import Link from "next/link"
 
@@ -39,6 +40,11 @@ const items = [
     title: "Code Audit",
     url: "/code-audit",
     icon: FileCode,
+  },
+  {
+    title: "Penetration Test",
+    url: "/pentest",
+    icon: Zap,
   },
   {
     title: "Report History",

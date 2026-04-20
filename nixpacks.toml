@@ -1,5 +1,5 @@
 [phases.setup]
-nixPkgs = ["...", "nmap", "semgrep"]
+nixPkgs = ["...", "nmap", "semgrep", "nuclei"]
 
 [phases.build]
 cmds = ["npm run build"]
