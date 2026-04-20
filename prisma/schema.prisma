@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
@@ -13,9 +13,9 @@ model ScanRecord {
   type      String   // "NETWORK", "CODE", "PENTEST", "RECON"
   target    String
   status    String   // "COMPLETED", "FAILED"
-  data      Json     // The raw scan results
-  summary   String?  // AI Generated Executive Summary
-  severity  String?  // "CLEAN", "LOW", "MEDIUM", "HIGH", "CRITICAL"
+  data      String   // SQLite doesn't support native JSON, so we'll store as string
+  summary   String?  
+  severity  String?  
 }
 
 model DiscoveredAsset {
@@ -23,6 +23,6 @@ model DiscoveredAsset {
   createdAt DateTime @default(now())
   domain    String   @unique
   ip        String?
-  source    String   // "SUBFINDER", "MANUAL"
+  source    String   
   lastSeen  DateTime @updatedAt
 }

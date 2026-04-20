@@ -46,7 +46,7 @@ export async function POST(req: NextRequest) {
           type: 'NETWORK',
           target: sanitizedTarget,
           status: 'COMPLETED',
-          data: scanData,
+          data: JSON.stringify(scanData),
           severity: ports.length > 0 ? 'LOW' : 'CLEAN'
         }
       });

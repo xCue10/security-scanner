@@ -45,7 +45,7 @@ export async function POST(req: NextRequest) {
           type: 'RECON',
           target: sanitizedDomain,
           status: 'COMPLETED',
-          data: { subdomains },
+          data: JSON.stringify({ subdomains }),
           severity: 'CLEAN'
         }
       });
