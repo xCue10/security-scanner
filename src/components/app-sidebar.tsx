@@ -10,6 +10,7 @@ import {
   FileCode,
   Zap,
   Radar,
+  PackageSearch,
 } from "lucide-react"
 import Link from "next/link"
 
@@ -46,6 +47,11 @@ const items = [
     title: "Code Auditor",
     url: "/code-audit",
     icon: FileCode,
+  },
+  {
+    title: "Dependency Audit",
+    url: "/dependency-audit",
+    icon: PackageSearch,
   },
   {
     title: "Security Test",
