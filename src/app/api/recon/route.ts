@@ -1,59 +1,35 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { exec } from 'child_process';
-import { promisify } from 'util';
-import { storage } from '@/lib/storage';
-
-const execAsync = promisify(exec);
+import { NextRequest, NextResponse } from "next/server";
+import dns from 'dns/promises';
 
 export async function POST(req: NextRequest) {
   try {
     const { domain } = await req.json();
 
     if (!domain) {
-      return NextResponse.json({ error: 'Domain is required' }, { status: 400 });
+      return NextResponse.json({ error: "Domain required" }, { status: 400 });
     }
 
-    const sanitizedDomain = domain.replace(/[^a-zA-Z0-9.-]/g, '');
-    const command = `subfinder -d ${sanitizedDomain} -silent`;
+    const results: any = { domain };
 
     try {
-      const { stdout } = await execAsync(command, { timeout: 30000 });
-      const subdomains = stdout.split('\n').filter(s => s.trim());
+      results.a = await dns.resolve4(domain);
+    } catch (e) {}
 
-      // Save to file storage
-      subdomains.forEach(sub => 
-        storage.upsertAsset({
-          domain: sub,
-          source: 'SUBFINDER'
-        })
-      );
+    try {
+      results.mx = await dns.resolveMx(domain);
+    } catch (e) {}
 
-      // Log the scan record
-      storage.addRecord({
-        type: 'RECON',
-        target: sanitizedDomain,
-        status: 'COMPLETED',
-        data: { subdomains },
-        severity: 'CLEAN'
-      });
+    try {
+      results.txt = await dns.resolveTxt(domain);
+    } catch (e) {}
 
-      return NextResponse.json({ subdomains });
+    try {
+      results.ns = await dns.resolveNs(domain);
+    } catch (e) {}
 
-    } catch (execError: any) {
-      console.error('Recon Error:', execError);
-      return NextResponse.json({ error: 'Asset discovery engine failed.' }, { status: 500 });
-    }
-
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
-  }
-}
-
-export async function GET() {
-  try {
-    const assets = storage.getAssets();
-    return NextResponse.json(assets);
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json(results);
+  } catch (error) {
+    console.error("Recon Error:", error);
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }

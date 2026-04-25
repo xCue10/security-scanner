@@ -15,6 +15,7 @@ import NetworkBreachModule from "@/components/NetworkBreachModule";
 import IntelligenceHub from "@/components/IntelligenceHub";
 import ForensicArtifacts from "@/components/ForensicArtifacts";
 import IntegrityLab from "@/components/IntegrityLab";
+import ShadowRecon from "@/components/ShadowRecon";
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState('forensics');
@@ -134,6 +135,7 @@ export default function Home() {
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
                 <PentestModule />
+                <ShadowRecon />
                 <NetworkBreachModule />
               </div>
               <div className="card" style={{ margin: 0 }}>

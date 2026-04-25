@@ -76,6 +76,25 @@ export default function IntegrityLab() {
           <div style={{ fontSize: '0.65rem', opacity: 0.5 }}>
             FILE_SIZE: {(result.fileSize / 1024).toFixed(2)} KB
           </div>
+
+          {result.strings && result.strings.length > 0 && (
+            <div style={{ marginTop: '0.5rem' }}>
+              <div style={{ opacity: 0.6, fontSize: '0.65rem', marginBottom: '0.4rem' }}>PRINTABLE_STRINGS (FORENSIC_EXTRACT):</div>
+              <div style={{ 
+                height: '100px', 
+                overflowY: 'auto', 
+                background: '#010409', 
+                padding: '0.5rem', 
+                borderRadius: '4px',
+                fontSize: '0.65rem',
+                opacity: 0.8,
+                whiteSpace: 'pre-wrap',
+                wordBreak: 'break-all'
+              }}>
+                {result.strings.join('\n')}
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>
