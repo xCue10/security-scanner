@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
       Be concise, professional, and highlight specific risks.
 
       Logs:
-      ${JSON.stringify(logs.slice(0, 50).map(l => ({ source: l.source, msg: l.message, risk: l.riskScore })))}
+      ${JSON.stringify(logs.slice(0, 50).map((l: any) => ({ source: l.source, msg: l.message, risk: l.riskScore })))}
 
       User Question: ${question}
     `;
