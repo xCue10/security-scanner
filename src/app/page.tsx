@@ -11,6 +11,8 @@ import AdvancedTools from "@/components/AdvancedTools";
 import ThreatMap from "@/components/ThreatMap";
 import Copilot from "@/components/Copilot";
 import NotificationManager from "@/components/NotificationManager";
+import NetworkBreachModule from "@/components/NetworkBreachModule";
+import IntelligenceHub from "@/components/IntelligenceHub";
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState('forensics');
@@ -19,7 +21,7 @@ export default function Home() {
     <main style={{ display: 'flex', height: '100vh', overflow: 'hidden', background: '#020408' }}>
       <NotificationManager />
 
-      {/* LEFT NAVIGATION SIDEBAR (Enterprise Formal) */}
+      {/* LEFT NAVIGATION SIDEBAR */}
       <nav style={{ 
         width: '280px', 
         borderRight: '1px solid var(--border)', 
@@ -69,7 +71,6 @@ export default function Home() {
       {/* MAIN CONTENT AREA */}
       <section style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
         
-        {/* FORMAL HEADER BAR */}
         <header style={{ 
           height: '70px', 
           borderBottom: '1px solid var(--border)', 
@@ -82,16 +83,14 @@ export default function Home() {
           <div style={{ fontSize: '0.8rem', opacity: 0.7 }}>
             SESSION_ID: <span style={{ color: 'var(--primary)' }}>{typeof window !== 'undefined' ? window.crypto.randomUUID().substring(0, 8) : '...'}</span>
           </div>
-          <div style={{ display: 'flex', gap: '1rem' }}>
-            <button onClick={() => window.print()} className="btn" style={{ fontSize: '0.7rem' }}>EXPORT_INTEL</button>
-          </div>
+          <button onClick={() => window.print()} className="btn" style={{ fontSize: '0.7rem' }}>EXPORT_INTEL</button>
         </header>
 
-        {/* DYNAMIC VIEWPORT */}
         <div style={{ flex: 1, padding: '2rem', overflowY: 'auto', background: 'radial-gradient(circle at 50% 50%, #0d1117 0%, #020408 100%)' }}>
           
           {activeTab === 'forensics' && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+              <IntelligenceHub />
               <div style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr', gap: '2rem' }}>
                 <div className="card" style={{ margin: 0, height: '400px' }}>
                   <h2>TEMPORAL MATRIX</h2>
@@ -117,8 +116,11 @@ export default function Home() {
 
           {activeTab === 'offensive' && (
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
-              <PentestModule />
-              <div className="card">
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+                <PentestModule />
+                <NetworkBreachModule />
+              </div>
+              <div className="card" style={{ margin: 0 }}>
                 <h2>SURFACE VECTOR ANALYSIS</h2>
                 <AttackSurfaceMap />
               </div>
