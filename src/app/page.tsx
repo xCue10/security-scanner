@@ -16,19 +16,20 @@ import IntelligenceHub from "@/components/IntelligenceHub";
 import ForensicArtifacts from "@/components/ForensicArtifacts";
 import IntegrityLab from "@/components/IntegrityLab";
 import ShadowRecon from "@/components/ShadowRecon";
+import ThemeToggle from "@/components/ThemeToggle";
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState('forensics');
 
   return (
-    <main style={{ display: 'flex', height: '100vh', overflow: 'hidden', background: '#020408' }}>
+    <main style={{ display: 'flex', height: '100vh', overflow: 'hidden', background: 'var(--background)' }}>
       <NotificationManager />
 
       {/* FIXED SIDEBAR NAVIGATION */}
       <nav style={{ 
         width: '240px', 
         borderRight: '1px solid var(--border)', 
-        background: '#0a0c10',
+        background: 'var(--sidebar-bg)',
         padding: '2rem 1rem',
         display: 'flex',
         flexDirection: 'column',
@@ -70,6 +71,7 @@ export default function Home() {
             <span className="status-dot online"></span>
             <span style={{ opacity: 0.6 }}>ENGINE_STABLE</span>
           </div>
+          <ThemeToggle />
         </div>
       </nav>
 
@@ -84,7 +86,7 @@ export default function Home() {
           justifyContent: 'space-between', 
           alignItems: 'center',
           padding: '0 2rem',
-          background: '#0a0c10'
+          background: 'var(--sidebar-bg)'
         }}>
           <div style={{ fontSize: '0.7rem', opacity: 0.6, letterSpacing: '1px' }}>
             OPERATOR_SESSION: <span style={{ color: 'var(--primary)' }}>{typeof window !== 'undefined' ? window.crypto.randomUUID().substring(0, 8).toUpperCase() : '...'}</span>
@@ -92,53 +94,51 @@ export default function Home() {
           <button onClick={() => window.print()} className="btn" style={{ fontSize: '0.6rem', height: '32px' }}>GENERATE_INTEL_REPORT</button>
         </header>
 
-        <div style={{ flex: 1, overflowY: 'auto', background: 'radial-gradient(circle at 50% 50%, #0d1117 0%, #020408 100%)' }}>
+        <div style={{ flex: 1, overflowY: 'auto', background: 'var(--background)' }}>
           
           {activeTab === 'forensics' && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', padding: '1.5rem' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
               
-              {/* ROW 1: GLOBAL INTELLIGENCE & KILLSWITCH */}
               <IntelligenceHub />
 
-              {/* ROW 2: PRIMARY FOCAL POINT (The Map) */}
-              <div style={{ height: '350px' }}>
-                <ThreatMap />
-              </div>
-
-              {/* ROW 3: THREE-COLUMN ANALYSIS WORKSPACE */}
-              <div style={{ display: 'grid', gridTemplateColumns: '320px 1fr 380px', gap: '1.5rem' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '320px 1fr 380px', gap: '1px', background: 'var(--border)', flex: 1 }}>
                 
-                {/* COLUMN 1: INTAKE TOOLS */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                  <div>
+                <div style={{ background: 'var(--background)', padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1.5rem', overflowY: 'auto' }}>
+                  <div style={{ marginBottom: '0.5rem' }}>
                     <h3 style={{ fontSize: '0.7rem', color: 'var(--primary)', marginBottom: '1rem' }}>◈ PHASE_01: INTAKE</h3>
-                    <div className="card" style={{ margin: 0, padding: '1rem', borderStyle: 'dashed' }}>
+                    <div className="card" style={{ padding: '1rem', borderStyle: 'dashed' }}>
                       <LogUploader />
                     </div>
                   </div>
+                  
                   <div>
                     <h3 style={{ fontSize: '0.7rem', color: 'var(--primary)', marginBottom: '1rem' }}>◈ PHASE_02: INTEGRITY</h3>
                     <IntegrityLab />
                   </div>
                 </div>
 
-                {/* COLUMN 2: CORE MONITORING */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                  <h3 style={{ fontSize: '0.7rem', color: 'var(--primary)' }}>◈ PHASE_03: TEMPORAL_MATRIX</h3>
-                  <div className="card" style={{ margin: 0, minHeight: '300px' }}>
+                <div style={{ background: 'var(--background)', padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1.5rem', overflowY: 'auto' }}>
+                  <h3 style={{ fontSize: '0.7rem', color: 'var(--primary)' }}>◈ PHASE_03: TEMPORAL_EXAMINATION</h3>
+                  <div className="card" style={{ minHeight: '300px', flexShrink: 0 }}>
                     <ForensicGraph />
                   </div>
-                  <h3 style={{ fontSize: '0.7rem', color: 'var(--primary)' }}>◈ PHASE_04: INTELLIGENCE_FEED</h3>
-                  <div className="card" style={{ margin: 0, flex: 1 }}>
+                  
+                  <h3 style={{ fontSize: '0.7rem', color: 'var(--primary)' }}>◈ PHASE_04: LIVE_STREAM</h3>
+                  <div className="card" style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
                     <LogFeed />
                   </div>
                 </div>
 
-                {/* COLUMN 3: RESULTS & MITIGATION */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                  <h3 style={{ fontSize: '0.7rem', color: 'var(--primary)' }}>◈ PHASE_05: ARTIFACT_EXTRACTION</h3>
+                <div style={{ background: 'var(--background)', padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1.5rem', overflowY: 'auto' }}>
+                  <h3 style={{ fontSize: '0.7rem', color: 'var(--primary)' }}>◈ PHASE_05: CORRELATION</h3>
+                  <div style={{ marginBottom: '1rem' }}>
+                    <ThreatMap />
+                  </div>
+                  
+                  <h3 style={{ fontSize: '0.7rem', color: 'var(--primary)' }}>◈ PHASE_06: ARTIFACTS</h3>
                   <ForensicArtifacts />
-                  <h3 style={{ fontSize: '0.7rem', color: 'var(--primary)' }}>◈ PHASE_06: MITIGATION_PLAN</h3>
+
+                  <h3 style={{ fontSize: '0.7rem', color: 'var(--primary)' }}>◈ PHASE_07: MITIGATION</h3>
                   <MitigationPanel />
                 </div>
 

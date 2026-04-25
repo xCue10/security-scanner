@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { LogProvider } from "@/context/LogContext";
+import { ThemeProvider } from "next-themes";
 
 export const metadata: Metadata = {
-  title: "AI Security Forensics Dashboard",
-  description: "Local Log Analysis & Threat Intelligence",
+  title: "Vanguard Security Suite",
+  description: "Enterprise Forensic Operations & Threat Intelligence",
 };
 
 export default function RootLayout({
@@ -13,11 +14,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body>
-        <LogProvider>
-          {children}
-        </LogProvider>
+        <ThemeProvider attribute="data-theme" defaultTheme="dark">
+          <LogProvider>
+            {children}
+          </LogProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
