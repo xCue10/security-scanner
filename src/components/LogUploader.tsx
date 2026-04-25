@@ -64,21 +64,18 @@ export default function LogUploader() {
       style={{
         border: `1px dashed ${isDragging ? 'var(--primary)' : 'var(--border)'}`,
         borderRadius: '8px',
-        padding: '2.5rem 1rem',
+        padding: '2rem 1rem',
         textAlign: 'center',
-        background: isDragging ? 'rgba(0, 242, 255, 0.05)' : 'rgba(0,0,0,0.2)',
-        transition: 'all 0.3s ease',
+        background: isDragging ? 'var(--primary-glow)' : 'var(--background)',
+        transition: 'all 0.2s ease',
         cursor: 'pointer',
-        position: 'relative'
       }}
     >
       <input type="file" multiple onChange={handleFileChange} style={{ display: 'none' }} id="fileInput" />
       <label htmlFor="fileInput" style={{ cursor: 'pointer' }}>
-        <div style={{ fontSize: '1.5rem', marginBottom: '0.5rem', color: isDragging ? 'var(--primary)' : 'var(--foreground)', opacity: 0.5 }}>⇮</div>
-        <p style={{ fontSize: '0.8rem', fontWeight: '700', letterSpacing: '1px', color: isDragging ? 'var(--primary)' : 'inherit' }}>
-          {isDragging ? 'RELEASE TO INGEST' : 'SECURE LOG DROP'}
-        </p>
-        <p style={{ fontSize: '0.65rem', opacity: 0.5, marginTop: '0.5rem' }}>SUPPORTED: .ZIP, .LOG, .CSV, .TXT</p>
+        <div style={{ fontSize: '1rem', marginBottom: '0.5rem', opacity: 0.5 }}>⇮</div>
+        <p style={{ fontSize: '0.7rem', fontWeight: 'bold' }}>{isDragging ? 'RELEASE_TO_INGEST' : 'UPLOAD_LOGS'}</p>
+        <p style={{ fontSize: '0.6rem', opacity: 0.4, marginTop: '0.4rem' }}>ZIP, LOG, CSV, TXT</p>
       </label>
     </div>
   );

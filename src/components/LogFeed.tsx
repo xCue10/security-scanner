@@ -28,86 +28,65 @@ export default function LogFeed() {
 
   if (isProcessing) {
     return (
-      <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
-        <div style={{ textAlign: 'center' }}>
-          <div className="status-dot online" style={{ width: '20px', height: '20px' }}></div>
-          <p style={{ marginTop: '1rem', letterSpacing: '2px', fontSize: '0.8rem' }}>DECRYPTING DATA...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (logs.length === 0) {
-    return (
-      <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0.3, height: '600px' }}>
-        <p>BUFFER EMPTY // AWAITING INGESTION</p>
+      <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', height: '400px' }}>
+        <p style={{ letterSpacing: '2px', fontSize: '0.7rem', opacity: 0.6 }}>DECRYPTING_DATA...</p>
       </div>
     );
   }
 
   return (
-    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', height: '600px' }}>
-      <div style={{ padding: '0 0 1rem 0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <span style={{ fontSize: '0.7rem', opacity: 0.6 }}>SEQUENCE COUNT: {logs.length}</span>
-        <button 
-          onClick={handleAnalyze} 
-          disabled={analyzing}
-          className="btn"
-          style={{ fontSize: '0.65rem', padding: '0.4rem 0.8rem' }}
-        >
-          {analyzing ? 'ANALYZING...' : 'RUN AI ANALYSIS'}
-        </button>
+    <div className="card" style={{ flex: 1, height: '600px' }}>
+      <div className="card-header">
+        <h2>LIVE_FORENSIC_STREAM</h2>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <span style={{ fontSize: '0.6rem', opacity: 0.5 }}>COUNT: {logs.length}</span>
+          <button onClick={handleAnalyze} disabled={analyzing || logs.length === 0} className="btn" style={{ fontSize: '0.6rem', padding: '0.3rem 0.6rem' }}>
+            {analyzing ? 'ANALYZING...' : 'RUN_AI'}
+          </button>
+        </div>
       </div>
       
-      <div style={{ 
-        flex: 1, 
-        overflowY: 'auto', 
-        paddingRight: '0.5rem',
-        maskImage: 'linear-gradient(to bottom, black 90%, transparent 100%)'
-      }}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
-          {logs.map((log) => (
-            <div key={log.id} style={{
-              fontSize: '0.75rem',
-              padding: '1rem',
-              border: '1px solid var(--border)',
-              background: 'var(--feed-item-bg)',
-              borderRadius: '8px',
-              position: 'relative',
-              transition: 'border-color 0.2s'
-            }} className="feed-item">
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', opacity: 0.5, fontSize: '0.65rem' }}>
-                <span>{log.timestamp}</span>
-                <span style={{ 
-                  color: log.riskScore && log.riskScore > 70 ? 'var(--danger)' : 
-                         log.riskScore && log.riskScore > 30 ? 'var(--warning)' : 'var(--primary)'
-                }}>{log.level.toUpperCase()}</span>
-              </div>
-              <div style={{ wordBreak: 'break-all', opacity: 0.9 }}>
-                <span style={{ color: 'var(--primary)', marginRight: '0.5rem' }}>[{log.source}]</span>
-                {log.message}
-              </div>
-              {log.analysis && (
-                <div style={{ 
-                  marginTop: '1rem', 
-                  padding: '0.8rem', 
-                  background: 'rgba(0, 242, 255, 0.05)', 
-                  borderLeft: '2px solid var(--primary)',
-                  fontSize: '0.7rem',
-                  lineHeight: '1.4'
-                }}>
-                  <span style={{ color: 'var(--primary)', fontWeight: 'bold', display: 'block', marginBottom: '0.3rem' }}>AI_INSIGHT:</span>
-                  {log.analysis}
-                  {log.riskScore && (
-                    <div style={{ marginTop: '0.5rem', fontWeight: 'bold' }}>
-                      THREAT_LEVEL: <span style={{ color: log.riskScore > 70 ? 'var(--danger)' : 'var(--warning)' }}>{log.riskScore}%</span>
-                    </div>
-                  )}
+      <div className="card-body" style={{ overflowY: 'auto', padding: '0.5rem' }}>
+        {logs.length === 0 ? (
+          <div style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0.3, fontSize: '0.7rem' }}>
+            AWAITING_INGESTION
+          </div>
+        ) : (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+            {logs.map((log) => (
+              <div key={log.id} style={{
+                fontSize: '0.7rem',
+                padding: '0.8rem',
+                border: '1px solid var(--border)',
+                background: 'var(--feed-item-bg)',
+                borderRadius: '6px',
+              }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.4rem', opacity: 0.5, fontSize: '0.6rem' }}>
+                  <span>{log.timestamp}</span>
+                  <span style={{ 
+                    color: log.riskScore && log.riskScore > 70 ? 'var(--danger)' : 
+                           log.riskScore && log.riskScore > 30 ? 'var(--warning)' : 'var(--primary)'
+                  }}>{log.level.toUpperCase()}</span>
                 </div>
-              )}
-            </div>
-          ))}
-        </div>
+                <div style={{ wordBreak: 'break-all', lineHeight: '1.4' }}>
+                  <span style={{ color: 'var(--primary)', marginRight: '0.4rem' }}>[{log.source}]</span>
+                  {log.message}
+                </div>
+                {log.analysis && (
+                  <div style={{ 
+                    marginTop: '0.6rem', 
+                    padding: '0.6rem', 
+                    background: 'var(--primary-glow)', 
+                    borderLeft: '2px solid var(--primary)',
+                    fontSize: '0.65rem'
+                  }}>
+                    <span style={{ color: 'var(--primary)', fontWeight: 'bold' }}>AI: </span>{log.analysis}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
