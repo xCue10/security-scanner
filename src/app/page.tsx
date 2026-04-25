@@ -96,38 +96,39 @@ export default function Home() {
           {activeTab === 'forensics' && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
               
-              {/* TOP ROW: GLOBAL INTELLIGENCE */}
+              {/* PHASE 1: DATA COLLECTION & INTEGRITY (THE WORKSPACE) */}
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1.5rem' }}>
+                <div className="card" style={{ margin: 0 }}>
+                  <h2><span style={{ color: 'var(--primary)' }}>[01]</span> LOG_INGESTION_BUFFER</h2>
+                  <LogUploader />
+                </div>
+                <div style={{ gridColumn: 'span 2' }}>
+                  <IntegrityLab />
+                </div>
+              </div>
+
+              {/* PHASE 2: REAL-TIME MONITORING */}
               <IntelligenceHub />
 
-              {/* SECOND ROW: PRIMARY VISUALS */}
+              {/* PHASE 3: VISUAL CORRELATION */}
               <div style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr', gap: '1.5rem' }}>
                 <div className="card" style={{ margin: 0, height: '350px' }}>
-                  <h2>TEMPORAL MATRIX</h2>
+                  <h2><span style={{ color: 'var(--primary)' }}>[02]</span> TEMPORAL THREAT MATRIX</h2>
                   <ForensicGraph />
                 </div>
                 <ThreatMap />
               </div>
 
-              {/* THIRD ROW: DEEP-DIVE WORKSPACE */}
+              {/* PHASE 4: DEEP INVESTIGATION */}
               <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr 0.8fr', gap: '1.5rem', minHeight: '500px' }}>
                 <div className="card" style={{ margin: 0, display: 'flex', flexDirection: 'column' }}>
-                  <h2>INTELLIGENCE FEED</h2>
+                  <h2><span style={{ color: 'var(--primary)' }}>[03]</span> INTELLIGENCE FEED</h2>
                   <LogFeed />
                 </div>
-                
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                  <ForensicArtifacts />
-                  <MitigationPanel />
-                </div>
-
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                  <div className="card" style={{ margin: 0 }}>
-                    <h2>INGEST BUFFER</h2>
-                    <LogUploader />
-                  </div>
-                  <IntegrityLab />
-                </div>
+                <ForensicArtifacts />
+                <MitigationPanel />
               </div>
+
             </div>
           )}
 
