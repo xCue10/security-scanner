@@ -13,6 +13,7 @@ import Copilot from "@/components/Copilot";
 import NotificationManager from "@/components/NotificationManager";
 import NetworkBreachModule from "@/components/NetworkBreachModule";
 import IntelligenceHub from "@/components/IntelligenceHub";
+import ForensicArtifacts from "@/components/ForensicArtifacts";
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState('forensics');
@@ -98,11 +99,12 @@ export default function Home() {
                 </div>
                 <ThreatMap />
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr', gap: '2rem' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr 0.8fr', gap: '2rem' }}>
                 <div className="card" style={{ margin: 0 }}>
                   <h2>INTELLIGENCE FEED</h2>
                   <LogFeed />
                 </div>
+                <ForensicArtifacts />
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
                   <div className="card" style={{ margin: 0 }}>
                     <h2>INGEST BUFFER</h2>
