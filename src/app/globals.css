@@ -69,6 +69,9 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  white-space: nowrap;
+  overflow: hidden;
+  gap: 1rem;
 }
 
 .card-body {

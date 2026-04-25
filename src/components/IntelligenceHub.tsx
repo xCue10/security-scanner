@@ -35,15 +35,18 @@ export default function IntelligenceHub() {
       </div>
 
       {/* Collapsible Killswitch */}
-      <div className="card" style={{ margin: 0, padding: '1rem' }}>
+      <div className="card" style={{ margin: 0 }}>
         <div 
           onClick={() => setIsKillswitchOpen(!isKillswitchOpen)} 
-          style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer' }}
+          className="card-header"
+          style={{ cursor: 'pointer' }}
         >
-          <h2 style={{ margin: 0, fontSize: '0.7rem' }}>
-            <span style={{ color: 'var(--danger)' }}>⚡</span> FIREWALL_KILLSWITCH_UTILITY
+          <h2 style={{ fontSize: '0.65rem' }}>
+            <span style={{ color: 'var(--danger)' }}>⚡</span> FIREWALL_BLOCK
           </h2>
-          <span style={{ fontSize: '0.6rem', opacity: 0.5 }}>{isKillswitchOpen ? '[ COLLAPSE ]' : '[ EXPAND ]'}</span>
+          <span style={{ fontSize: '0.6rem', opacity: 0.5, flexShrink: 0 }}>
+            {isKillswitchOpen ? '[ COLLAPSE ]' : '[ EXPAND ]'}
+          </span>
         </div>
 
         {isKillswitchOpen && (
