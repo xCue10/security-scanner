@@ -10,10 +10,12 @@ import AttackSurfaceMap from "@/components/AttackSurfaceMap";
 import AdvancedTools from "@/components/AdvancedTools";
 import ThreatMap from "@/components/ThreatMap";
 import Copilot from "@/components/Copilot";
+import NotificationManager from "@/components/NotificationManager";
 
 export default function Home() {
   return (
     <main className="container">
+      <NotificationManager />
       {/* HEADER SECTION */}
       <header style={{ 
         marginBottom: '3rem', 

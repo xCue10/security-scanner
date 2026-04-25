@@ -12,10 +12,13 @@ export default function AttackSurfaceMap() {
   const nodes: { id: string, type: 'ip' | 'endpoint' }[] = [];
   const links: { source: string, target: string }[] = [];
 
-  logs.slice(0, 20).forEach(log => {
-    // Fake extraction for visualization
-    const ip = `IP-${log.source.substring(0, 3)}`;
-    const endpoint = `/api/${log.message.split(' ')[0].substring(0, 5)}`;
+  logs.slice(0, 50).forEach(log => {
+    // Real Regex Extraction
+    const ipMatch = log.message.match(/(\d{1,3}\.){3}\d{1,3}/);
+    const endpointMatch = log.message.match(/\/(api|v\d|wp-admin|admin|login|upload)[a-zA-Z0-9\/\-_]*/);
+    
+    const ip = ipMatch ? ipMatch[0] : `SRC-${log.source.substring(0, 5)}`;
+    const endpoint = endpointMatch ? endpointMatch[0] : `/root${log.id.substring(0, 3)}`;
     
     if (!nodes.find(n => n.id === ip)) nodes.push({ id: ip, type: 'ip' });
     if (!nodes.find(n => n.id === endpoint)) nodes.push({ id: endpoint, type: 'endpoint' });

@@ -7,17 +7,23 @@ export default function AdvancedTools() {
   const [canary, setCanary] = useState<any>(null);
   const [auditResults, setAuditResults] = useState<SecretAuditResult[]>([]);
 
+  const [auditing, setAuditing] = useState(false);
+
   const handleGenCanary = () => {
     setCanary(generateCanaryToken());
   };
 
-  const handleAuditCode = () => {
-    // Simulated audit of the current environment
-    const results = auditCodeForSecrets([
-      { name: '.env.local', content: 'GEMINI_API_KEY=dummy_key_here\nDB_PASSWORD=12345' },
-      { name: 'src/app/api/analyze/route.ts', content: 'const key = "AKIA1234567890ABCDEF";' }
-    ]);
-    setAuditResults(results);
+  const handleAuditCode = async () => {
+    setAuditing(true);
+    try {
+      const res = await fetch('/api/audit-local');
+      const data = await res.json();
+      setAuditResults(data.results || []);
+    } catch (error) {
+      console.error('Audit failed:', error);
+    } finally {
+      setAuditing(false);
+    }
   };
 
   return (
@@ -38,7 +44,9 @@ export default function AdvancedTools() {
       <div className="card">
         <h3>Secret Auditor</h3>
         <p style={{ fontSize: '0.8rem', marginBottom: '1rem' }}>Scan local files for leaked credentials.</p>
-        <button onClick={handleAuditCode} className="btn btn-primary">Audit Project Code</button>
+        <button onClick={handleAuditCode} disabled={auditing} className="btn btn-primary">
+          {auditing ? 'AUDITING...' : 'Audit Project Code'}
+        </button>
         {auditResults.length > 0 && (
           <div style={{ marginTop: '1rem' }}>
             {auditResults.map((r, i) => (
