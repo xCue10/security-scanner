@@ -14,6 +14,7 @@ import NotificationManager from "@/components/NotificationManager";
 import NetworkBreachModule from "@/components/NetworkBreachModule";
 import IntelligenceHub from "@/components/IntelligenceHub";
 import ForensicArtifacts from "@/components/ForensicArtifacts";
+import IntegrityLab from "@/components/IntegrityLab";
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState('forensics');
@@ -118,15 +119,12 @@ export default function Home() {
                   <MitigationPanel />
                 </div>
 
-                <div className="card" style={{ margin: 0 }}>
-                  <h2>INGEST BUFFER</h2>
-                  <LogUploader />
-                  <div style={{ marginTop: '2rem', padding: '1rem', border: '1px solid var(--border)', borderRadius: '8px', background: 'rgba(0, 242, 255, 0.02)' }}>
-                    <h3 style={{ fontSize: '0.7rem', color: 'var(--primary)', marginBottom: '0.5rem' }}>STUDENT_NOTE</h3>
-                    <p style={{ fontSize: '0.65rem', opacity: 0.6, lineHeight: '1.4' }}>
-                      Artifact extraction is performing real-time Shannon Entropy checks and IoC matching on the ingest buffer.
-                    </p>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                  <div className="card" style={{ margin: 0 }}>
+                    <h2>INGEST BUFFER</h2>
+                    <LogUploader />
                   </div>
+                  <IntegrityLab />
                 </div>
               </div>
             </div>
