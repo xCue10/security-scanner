@@ -4,31 +4,23 @@ import React, { useState } from 'react';
 import { useLogs } from '@/context/LogContext';
 
 export default function LogFeed() {
-  const { logs, isProcessing, setIsProcessing, updateLogs } = useLogs();
+  const { logs, isProcessing, updateLogs } = useLogs();
   const [analyzing, setAnalyzing] = useState(false);
 
   const handleAnalyze = async () => {
     if (logs.length === 0) return;
-    
     setAnalyzing(true);
     try {
-      // Analyze the first 50 logs for now to stay within limits
       const logsToAnalyze = logs.slice(0, 50);
       const response = await fetch('/api/analyze', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ logs: logsToAnalyze })
       });
-
-      if (!response.ok) throw new Error('Analysis failed');
-
       const data = await response.json();
-      if (data.analyses) {
-        updateLogs(data.analyses);
-      }
+      if (data.analyses) updateLogs(data.analyses);
     } catch (error) {
       console.error('Analysis error:', error);
-      alert('Failed to analyze logs. Make sure GEMINI_API_KEY is set.');
     } finally {
       setAnalyzing(false);
     }
@@ -36,86 +28,81 @@ export default function LogFeed() {
 
   if (isProcessing) {
     return (
-      <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <p>Processing logs...</p>
+      <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
+        <div style={{ textAlign: 'center' }}>
+          <div className="status-dot online" style={{ width: '20px', height: '20px' }}></div>
+          <p style={{ marginTop: '1rem', letterSpacing: '2px', fontSize: '0.8rem' }}>DECRYPTING DATA...</p>
+        </div>
       </div>
     );
   }
 
   if (logs.length === 0) {
     return (
-      <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0.5 }}>
-        <p>No logs ingested yet. Upload a file to see data.</p>
+      <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0.3, height: '600px' }}>
+        <p>BUFFER EMPTY // AWAITING INGESTION</p>
       </div>
     );
   }
 
   return (
-    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', height: '100%' }}>
-      <div style={{ padding: '1rem', borderBottom: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <span>{logs.length} entries</span>
+    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', height: '600px' }}>
+      <div style={{ padding: '0 0 1rem 0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <span style={{ fontSize: '0.7rem', opacity: 0.6 }}>SEQUENCE COUNT: {logs.length}</span>
         <button 
           onClick={handleAnalyze} 
           disabled={analyzing}
-          className="btn btn-primary"
-          style={{ fontSize: '0.8rem' }}
+          className="btn"
+          style={{ fontSize: '0.65rem', padding: '0.4rem 0.8rem' }}
         >
-          {analyzing ? 'Analyzing with AI...' : 'Run AI Forensic Analysis'}
+          {analyzing ? 'ANALYZING...' : 'RUN AI ANALYSIS'}
         </button>
       </div>
-      <div style={{ flex: 1, overflowY: 'auto', padding: '0.5rem' }}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+      
+      <div style={{ 
+        flex: 1, 
+        overflowY: 'auto', 
+        paddingRight: '0.5rem',
+        maskImage: 'linear-gradient(to bottom, black 90%, transparent 100%)'
+      }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
           {logs.map((log) => (
             <div key={log.id} style={{
-              fontSize: '0.8rem',
-              padding: '0.5rem',
-              borderLeft: `3px solid ${
-                log.riskScore && log.riskScore > 70 ? 'var(--danger)' :
-                log.riskScore && log.riskScore > 30 ? 'var(--warning)' :
-                log.level === 'error' ? 'var(--danger)' : 
-                log.level === 'warning' ? 'var(--warning)' : 'var(--border)'
-              }`,
-              background: 'rgba(255, 255, 255, 0.03)',
-              borderRadius: '0 4px 4px 0',
-              position: 'relative'
-            }}>
-              {log.riskScore && (
-                <div style={{ 
-                  position: 'absolute', 
-                  top: '0.5rem', 
-                  right: '0.5rem',
-                  padding: '2px 6px',
-                  borderRadius: '4px',
-                  background: log.riskScore > 70 ? 'var(--danger)' : 'var(--warning)',
-                  color: 'white',
-                  fontSize: '0.7rem',
-                  fontWeight: 'bold'
-                }}>
-                  RISK: {log.riskScore}
-                </div>
-              )}
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.2rem', opacity: 0.7 }}>
+              fontSize: '0.75rem',
+              padding: '1rem',
+              border: '1px solid var(--border)',
+              background: 'rgba(255, 255, 255, 0.02)',
+              borderRadius: '8px',
+              position: 'relative',
+              transition: 'border-color 0.2s'
+            }} className="feed-item">
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', opacity: 0.5, fontSize: '0.65rem' }}>
                 <span>{log.timestamp}</span>
                 <span style={{ 
-                  color: log.level === 'error' ? 'var(--danger)' : 
-                         log.level === 'warning' ? 'var(--warning)' : 'var(--primary)',
-                  marginRight: log.riskScore ? '3.5rem' : '0'
+                  color: log.riskScore && log.riskScore > 70 ? 'var(--danger)' : 
+                         log.riskScore && log.riskScore > 30 ? 'var(--warning)' : 'var(--primary)'
                 }}>{log.level.toUpperCase()}</span>
               </div>
-              <div style={{ wordBreak: 'break-all' }}>
-                <strong>{log.source}:</strong> {log.message}
+              <div style={{ wordBreak: 'break-all', opacity: 0.9 }}>
+                <span style={{ color: 'var(--primary)', marginRight: '0.5rem' }}>[{log.source}]</span>
+                {log.message}
               </div>
               {log.analysis && (
                 <div style={{ 
-                  marginTop: '0.5rem', 
-                  padding: '0.5rem', 
-                  background: 'rgba(88, 166, 255, 0.1)', 
-                  border: '1px solid var(--primary)',
-                  borderRadius: '4px',
-                  fontSize: '0.75rem'
+                  marginTop: '1rem', 
+                  padding: '0.8rem', 
+                  background: 'rgba(0, 242, 255, 0.05)', 
+                  borderLeft: '2px solid var(--primary)',
+                  fontSize: '0.7rem',
+                  lineHeight: '1.4'
                 }}>
-                  <div style={{ color: 'var(--primary)', fontWeight: 'bold', marginBottom: '0.2rem' }}>AI ANALYSIS:</div>
+                  <span style={{ color: 'var(--primary)', fontWeight: 'bold', display: 'block', marginBottom: '0.3rem' }}>AI_INSIGHT:</span>
                   {log.analysis}
+                  {log.riskScore && (
+                    <div style={{ marginTop: '0.5rem', fontWeight: 'bold' }}>
+                      THREAT_LEVEL: <span style={{ color: log.riskScore > 70 ? 'var(--danger)' : 'var(--warning)' }}>{log.riskScore}%</span>
+                    </div>
+                  )}
                 </div>
               )}
             </div>

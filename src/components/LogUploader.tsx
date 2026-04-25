@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 import { useLogs, LogEntry } from '@/context/LogContext';
-
 import JSZip from 'jszip';
 
 export default function LogUploader() {
@@ -11,18 +10,14 @@ export default function LogUploader() {
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
-    if (files && files.length > 0) {
-      processFiles(files);
-    }
+    if (files && files.length > 0) processFiles(files);
   };
 
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     setIsDragging(false);
     const files = e.dataTransfer.files;
-    if (files && files.length > 0) {
-      processFiles(files);
-    }
+    if (files && files.length > 0) processFiles(files);
   };
 
   const parseLogContent = (text: string, sourceName: string): LogEntry[] => {
@@ -41,7 +36,6 @@ export default function LogUploader() {
   const processFiles = async (files: FileList) => {
     setIsProcessing(true);
     const allNewEntries: LogEntry[] = [];
-
     for (const file of Array.from(files)) {
       if (file.name.endsWith('.zip')) {
         try {
@@ -52,15 +46,12 @@ export default function LogUploader() {
               allNewEntries.push(...parseLogContent(content, `${file.name}/${filename}`));
             }
           }
-        } catch (error) {
-          console.error(`Error processing zip file ${file.name}:`, error);
-        }
+        } catch (error) { console.error(error); }
       } else {
         const text = await file.text();
         allNewEntries.push(...parseLogContent(text, file.name));
       }
     }
-
     addLogs(allNewEntries);
     setIsProcessing(false);
   };
@@ -71,25 +62,23 @@ export default function LogUploader() {
       onDragLeave={() => setIsDragging(false)}
       onDrop={handleDrop}
       style={{
-        border: `2px dashed ${isDragging ? 'var(--primary)' : 'var(--border)'}`,
-        borderRadius: '6px',
-        padding: '2rem',
+        border: `1px dashed ${isDragging ? 'var(--primary)' : 'var(--border)'}`,
+        borderRadius: '8px',
+        padding: '2.5rem 1rem',
         textAlign: 'center',
-        background: isDragging ? 'rgba(88, 166, 255, 0.1)' : 'transparent',
-        transition: 'all 0.2s ease',
-        cursor: 'pointer'
+        background: isDragging ? 'rgba(0, 242, 255, 0.05)' : 'rgba(0,0,0,0.2)',
+        transition: 'all 0.3s ease',
+        cursor: 'pointer',
+        position: 'relative'
       }}
     >
-      <input 
-        type="file" 
-        multiple 
-        onChange={handleFileChange} 
-        style={{ display: 'none' }} 
-        id="fileInput"
-      />
+      <input type="file" multiple onChange={handleFileChange} style={{ display: 'none' }} id="fileInput" />
       <label htmlFor="fileInput" style={{ cursor: 'pointer' }}>
-        <p style={{ marginBottom: '0.5rem' }}>Drag & drop files here</p>
-        <p style={{ fontSize: '0.8rem', opacity: 0.6 }}>or click to browse</p>
+        <div style={{ fontSize: '1.5rem', marginBottom: '0.5rem', color: isDragging ? 'var(--primary)' : 'var(--foreground)', opacity: 0.5 }}>⇮</div>
+        <p style={{ fontSize: '0.8rem', fontWeight: '700', letterSpacing: '1px', color: isDragging ? 'var(--primary)' : 'inherit' }}>
+          {isDragging ? 'RELEASE TO INGEST' : 'SECURE LOG DROP'}
+        </p>
+        <p style={{ fontSize: '0.65rem', opacity: 0.5, marginTop: '0.5rem' }}>SUPPORTED: .ZIP, .LOG, .CSV, .TXT</p>
       </label>
     </div>
   );
