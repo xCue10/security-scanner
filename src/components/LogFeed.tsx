@@ -71,7 +71,7 @@ export default function LogFeed() {
               fontSize: '0.75rem',
               padding: '1rem',
               border: '1px solid var(--border)',
-              background: 'rgba(255, 255, 255, 0.02)',
+              background: 'var(--feed-item-bg)',
               borderRadius: '8px',
               position: 'relative',
               transition: 'border-color 0.2s'

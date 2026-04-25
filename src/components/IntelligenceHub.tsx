@@ -73,7 +73,7 @@ export default function IntelligenceHub() {
               <div style={{ 
                 marginTop: '1rem', 
                 padding: '0.8rem', 
-                background: '#010409', 
+                background: 'var(--code-bg)', 
                 borderRadius: '4px', 
                 borderLeft: '2px solid var(--danger)',
                 fontSize: '0.7rem'

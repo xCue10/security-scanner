@@ -33,7 +33,7 @@ export default function AdvancedTools() {
         <p style={{ fontSize: '0.8rem', marginBottom: '1rem' }}>Create "bait" to trap attackers.</p>
         <button onClick={handleGenCanary} className="btn">Generate Canary</button>
         {canary && (
-          <div style={{ marginTop: '1rem', padding: '0.5rem', background: '#010409', border: '1px solid var(--primary)', borderRadius: '4px', fontSize: '0.75rem' }}>
+          <div style={{ marginTop: '1rem', padding: '0.5rem', background: 'var(--code-bg)', border: '1px solid var(--primary)', borderRadius: '4px', fontSize: '0.75rem' }}>
             <p><strong>URL:</strong> {canary.url}</p>
             <p><strong>Token:</strong> <code>{canary.token}</code></p>
             <p style={{ marginTop: '0.5rem', opacity: 0.7 }}>{canary.instructions}</p>

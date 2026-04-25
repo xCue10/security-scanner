@@ -37,7 +37,7 @@ export default function ForensicArtifacts() {
             padding: '1rem', 
             border: '1px solid var(--border)', 
             borderRadius: '6px', 
-            background: 'rgba(255,255,255,0.02)',
+            background: 'var(--feed-item-bg)',
             borderLeft: `4px solid ${art.risk === 'high' ? 'var(--danger)' : art.risk === 'medium' ? 'var(--warning)' : 'var(--primary)'}`
           }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>

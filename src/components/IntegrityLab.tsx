@@ -69,12 +69,12 @@ export default function IntegrityLab() {
                 <div style={{ fontWeight: 'bold' }}>{result.detectedType}</div>
               </div>
 
-              <div style={{ padding: '0.8rem', background: '#010409', borderRadius: '6px' }}>
+              <div style={{ padding: '0.8rem', background: 'var(--code-bg)', borderRadius: '6px' }}>
                 <div style={{ opacity: 0.6, marginBottom: '0.2rem' }}>MAGIC_BYTES (HEX):</div>
                 <code style={{ color: 'var(--primary)', letterSpacing: '1px' }}>{result.magicBytes}</code>
               </div>
 
-              <div style={{ padding: '0.8rem', background: '#010409', borderRadius: '6px' }}>
+              <div style={{ padding: '0.8rem', background: 'var(--code-bg)', borderRadius: '6px' }}>
                 <div style={{ opacity: 0.6, marginBottom: '0.2rem' }}>SHA-256 FINGERPRINT:</div>
                 <code style={{ wordBreak: 'break-all', color: 'var(--accent)', fontSize: '0.65rem' }}>{result.sha256}</code>
                 <button 
@@ -91,7 +91,7 @@ export default function IntegrityLab() {
                   <div style={{ 
                     height: '100px', 
                     overflowY: 'auto', 
-                    background: '#010409', 
+                    background: 'var(--code-bg)', 
                     padding: '0.5rem', 
                     borderRadius: '4px',
                     fontSize: '0.65rem',
