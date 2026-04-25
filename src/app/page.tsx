@@ -17,6 +17,7 @@ import ForensicArtifacts from "@/components/ForensicArtifacts";
 import IntegrityLab from "@/components/IntegrityLab";
 import ShadowRecon from "@/components/ShadowRecon";
 import ThemeToggle from "@/components/ThemeToggle";
+import LogoutButton from "@/components/LogoutButton";
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState('forensics');
@@ -72,6 +73,7 @@ export default function Home() {
             <span style={{ opacity: 0.6 }}>ENGINE_STABLE</span>
           </div>
           <ThemeToggle />
+          <LogoutButton />
         </div>
       </nav>
 
@@ -103,37 +105,32 @@ export default function Home() {
 
               <div style={{ display: 'grid', gridTemplateColumns: '320px 1fr 380px', gap: '1px', background: 'var(--border)', flex: 1 }}>
                 
+                {/* COLUMN 1: EVIDENCE INTAKE */}
                 <div style={{ background: 'var(--background)', padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1.5rem', overflowY: 'auto' }}>
-                  <div style={{ marginBottom: '0.5rem' }}>
+                  <div>
                     <h3 style={{ fontSize: '0.7rem', color: 'var(--primary)', marginBottom: '1rem' }}>◈ PHASE_01: INTAKE</h3>
-                    <div className="card" style={{ padding: '1rem', borderStyle: 'dashed' }}>
-                      <LogUploader />
-                    </div>
+                    <LogUploader />
                   </div>
-                  
                   <div>
                     <h3 style={{ fontSize: '0.7rem', color: 'var(--primary)', marginBottom: '1rem' }}>◈ PHASE_02: INTEGRITY</h3>
                     <IntegrityLab />
                   </div>
                 </div>
 
+                {/* COLUMN 2: CORE MONITORING */}
                 <div style={{ background: 'var(--background)', padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1.5rem', overflowY: 'auto' }}>
-                  <h3 style={{ fontSize: '0.7rem', color: 'var(--primary)' }}>◈ PHASE_03: TEMPORAL_EXAMINATION</h3>
-                  <div className="card" style={{ minHeight: '300px', flexShrink: 0 }}>
+                  <h3 style={{ fontSize: '0.7rem', color: 'var(--primary)' }}>◈ PHASE_03: TEMPORAL_MATRIX</h3>
+                  <div className="card" style={{ margin: 0, minHeight: '300px' }}>
                     <ForensicGraph />
                   </div>
-                  
-                  <h3 style={{ fontSize: '0.7rem', color: 'var(--primary)' }}>◈ PHASE_04: LIVE_STREAM</h3>
-                  <div className="card" style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-                    <LogFeed />
-                  </div>
+                  <h3 style={{ fontSize: '0.7rem', color: 'var(--primary)' }}>◈ PHASE_04: INTELLIGENCE_FEED</h3>
+                  <LogFeed />
                 </div>
 
+                {/* COLUMN 3: RESULTS & MITIGATION */}
                 <div style={{ background: 'var(--background)', padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1.5rem', overflowY: 'auto' }}>
                   <h3 style={{ fontSize: '0.7rem', color: 'var(--primary)' }}>◈ PHASE_05: CORRELATION</h3>
-                  <div style={{ marginBottom: '1rem' }}>
-                    <ThreatMap />
-                  </div>
+                  <ThreatMap />
                   
                   <h3 style={{ fontSize: '0.7rem', color: 'var(--primary)' }}>◈ PHASE_06: ARTIFACTS</h3>
                   <ForensicArtifacts />
