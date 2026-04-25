@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import LogUploader from "@/components/LogUploader";
 import LogFeed from "@/components/LogFeed";
 import ForensicGraph from "@/components/ForensicGraph";
@@ -13,92 +13,143 @@ import Copilot from "@/components/Copilot";
 import NotificationManager from "@/components/NotificationManager";
 
 export default function Home() {
+  const [activeTab, setActiveTab] = useState('forensics');
+
   return (
-    <main className="container">
+    <main style={{ display: 'flex', height: '100vh', overflow: 'hidden', background: '#020408' }}>
       <NotificationManager />
-      {/* HEADER SECTION */}
-      <header style={{ 
-        marginBottom: '3rem', 
-        display: 'flex', 
-        justifyContent: 'space-between', 
-        alignItems: 'center',
-        background: 'var(--glass-bg)',
-        padding: '1.5rem 2rem',
-        borderRadius: '12px',
-        border: '1px solid var(--border)'
+
+      {/* LEFT NAVIGATION SIDEBAR (Enterprise Formal) */}
+      <nav style={{ 
+        width: '280px', 
+        borderRight: '1px solid var(--border)', 
+        background: '#0a0c10',
+        padding: '2rem 1rem',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '2rem'
       }}>
-        <div>
-          <h1 style={{ fontSize: '1.8rem', margin: 0 }}>Vanguard Security Suite</h1>
-          <div style={{ display: 'flex', gap: '1.5rem', marginTop: '0.5rem', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '1px' }}>
-            <span><span className="status-dot online"></span> System: Operational</span>
-            <span style={{ color: 'var(--primary)' }}>Scan Engine: Active</span>
+        <div style={{ padding: '0 1rem' }}>
+          <h1 style={{ fontSize: '1.2rem', letterSpacing: '2px', color: 'var(--primary)', marginBottom: '0.2rem' }}>VANGUARD</h1>
+          <p style={{ fontSize: '0.65rem', opacity: 0.5, textTransform: 'uppercase' }}>Security Operations Suite</p>
+        </div>
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+          {['forensics', 'offensive', 'deception', 'audit'].map(tab => (
+            <button 
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              style={{
+                textAlign: 'left',
+                padding: '0.8rem 1rem',
+                borderRadius: '6px',
+                background: activeTab === tab ? 'rgba(0, 242, 255, 0.05)' : 'transparent',
+                border: 'none',
+                color: activeTab === tab ? 'var(--primary)' : 'var(--foreground)',
+                fontSize: '0.8rem',
+                textTransform: 'uppercase',
+                letterSpacing: '1px',
+                cursor: 'pointer',
+                borderLeft: activeTab === tab ? '2px solid var(--primary)' : '2px solid transparent'
+              }}
+            >
+              {tab}
+            </button>
+          ))}
+        </div>
+
+        <div style={{ marginTop: 'auto', padding: '1rem', borderTop: '1px solid var(--border)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.7rem' }}>
+            <span className="status-dot online"></span>
+            <span style={{ opacity: 0.6 }}>SYSTEM READY</span>
           </div>
         </div>
-        <button onClick={() => window.print()} className="btn">
-          Generate Intelligence Report
-        </button>
-      </header>
+      </nav>
 
-      {/* PRIMARY VISUALIZATION GRID */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '2rem', marginBottom: '2rem' }}>
-        <div className="card" style={{ margin: 0 }}>
-          <h2><span style={{ color: 'var(--primary)' }}>◈</span> Threat Matrix</h2>
-          <ForensicGraph />
-        </div>
-        <ThreatMap />
-        <div className="card" style={{ margin: 0 }}>
-          <h2><span style={{ color: 'var(--secondary)' }}>◈</span> Surface Vector</h2>
-          <AttackSurfaceMap />
-        </div>
-      </div>
-
-      {/* CORE OPERATIONS GRID */}
-      <div style={{ display: 'grid', gridTemplateColumns: '350px 1fr 350px', gap: '2rem' }}>
+      {/* MAIN CONTENT AREA */}
+      <section style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
         
-        {/* LEFT COLUMN: Offensive & Ingestion */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-          <div className="card" style={{ margin: 0 }}>
-            <h2><span style={{ color: 'var(--accent)' }}>▼</span> Ingestion</h2>
-            <p style={{ fontSize: '0.8rem', opacity: 0.7, marginBottom: '1.5rem' }}>Drop logs into the secure buffer for parsing.</p>
-            <LogUploader />
+        {/* FORMAL HEADER BAR */}
+        <header style={{ 
+          height: '70px', 
+          borderBottom: '1px solid var(--border)', 
+          display: 'flex', 
+          justifyContent: 'space-between', 
+          alignItems: 'center',
+          padding: '0 2rem',
+          background: '#0a0c10'
+        }}>
+          <div style={{ fontSize: '0.8rem', opacity: 0.7 }}>
+            SESSION_ID: <span style={{ color: 'var(--primary)' }}>{typeof window !== 'undefined' ? window.crypto.randomUUID().substring(0, 8) : '...'}</span>
           </div>
+          <div style={{ display: 'flex', gap: '1rem' }}>
+            <button onClick={() => window.print()} className="btn" style={{ fontSize: '0.7rem' }}>EXPORT_INTEL</button>
+          </div>
+        </header>
+
+        {/* DYNAMIC VIEWPORT */}
+        <div style={{ flex: 1, padding: '2rem', overflowY: 'auto', background: 'radial-gradient(circle at 50% 50%, #0d1117 0%, #020408 100%)' }}>
           
-          <PentestModule />
-
-          <Copilot />
-        </div>
-
-        {/* CENTER COLUMN: Analysis Feed */}
-        <div className="card" style={{ margin: 0, display: 'flex', flexDirection: 'column' }}>
-          <h2><span style={{ color: 'var(--primary)' }}>▼</span> Live Forensic Stream</h2>
-          <LogFeed />
-        </div>
-
-        {/* RIGHT COLUMN: Deception & Mitigation */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-          <AdvancedTools />
-          <MitigationPanel />
-          
-          <div className="card" style={{ margin: 0 }}>
-            <h2><span style={{ color: 'var(--warning)' }}>▼</span> System Diagnostics</h2>
-            <div style={{ fontSize: '0.75rem', display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ opacity: 0.6 }}>AI CORES:</span>
-                <span style={{ color: 'var(--accent)' }}>STABLE (1.5-FLASH)</span>
+          {activeTab === 'forensics' && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr', gap: '2rem' }}>
+                <div className="card" style={{ margin: 0, height: '400px' }}>
+                  <h2>TEMPORAL MATRIX</h2>
+                  <ForensicGraph />
+                </div>
+                <ThreatMap />
               </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ opacity: 0.6 }}>LOCAL DB:</span>
-                <span style={{ color: 'var(--accent)' }}>SYNCED</span>
-              </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ opacity: 0.6 }}>GEO-LOCK:</span>
-                <span style={{ color: 'var(--primary)' }}>ACTIVE</span>
+              <div style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr', gap: '2rem' }}>
+                <div className="card" style={{ margin: 0 }}>
+                  <h2>INTELLIGENCE FEED</h2>
+                  <LogFeed />
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+                  <div className="card" style={{ margin: 0 }}>
+                    <h2>INGEST BUFFER</h2>
+                    <LogUploader />
+                  </div>
+                  <MitigationPanel />
+                </div>
               </div>
             </div>
-          </div>
-        </div>
+          )}
 
-      </div>
+          {activeTab === 'offensive' && (
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
+              <PentestModule />
+              <div className="card">
+                <h2>SURFACE VECTOR ANALYSIS</h2>
+                <AttackSurfaceMap />
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'deception' && (
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
+              <AdvancedTools />
+              <div className="card">
+                <h2>HONEYPOT STATUS</h2>
+                <p style={{ opacity: 0.5, fontSize: '0.8rem' }}>Monitoring active canary endpoints...</p>
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'audit' && (
+            <div style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr', gap: '2rem' }}>
+              <Copilot />
+              <div className="card">
+                <h2>SECURITY POSTURE</h2>
+                <div style={{ padding: '2rem', textAlign: 'center' }}>
+                  <div style={{ fontSize: '3rem', color: 'var(--primary)' }}>A+</div>
+                  <p style={{ opacity: 0.6, fontSize: '0.7rem' }}>Current Infrastructure Integrity</p>
+                </div>
+              </div>
+            </div>
+          )}
+
+        </div>
+      </section>
     </main>
   );
 }
