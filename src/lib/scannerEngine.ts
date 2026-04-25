@@ -62,3 +62,49 @@ export async function runSecurityProbes(targetUrl: string): Promise<ScanResult[]
 
   return results;
 }
+
+export interface SecretAuditResult {
+  file: string;
+  line: number;
+  type: string;
+  snippet: string;
+  severity: 'critical' | 'high';
+}
+
+export function auditCodeForSecrets(files: { name: string, content: string }[]): SecretAuditResult[] {
+  const secrets: SecretAuditResult[] = [];
+  const regexes = [
+    { type: 'AWS Key', regex: /AKIA[0-9A-Z]{16}/g },
+    { type: 'Generic Secret', regex: /secret|password|api_key|token/gi },
+    { type: 'Private Key', regex: /-----BEGIN RSA PRIVATE KEY-----/g }
+  ];
+
+  files.forEach(file => {
+    const lines = file.content.split('\n');
+    lines.forEach((line, index) => {
+      regexes.forEach(r => {
+        if (r.regex.test(line)) {
+          secrets.push({
+            file: file.name,
+            line: index + 1,
+            type: r.type,
+            snippet: line.trim().substring(0, 50) + '...',
+            severity: 'critical'
+          });
+        }
+      });
+    });
+  });
+
+  return secrets;
+}
+
+export function generateCanaryToken() {
+  const id = Math.random().toString(36).substring(7);
+  return {
+    id,
+    token: `sk_live_canary_${id}`,
+    url: `/api/v1/status/check_${id}`,
+    instructions: "Place this 'fake' API key in your .env or the URL in a hidden link. If anyone accesses them, we'll alert you."
+  };
+}

@@ -5,6 +5,8 @@ import LogFeed from "@/components/LogFeed";
 import ForensicGraph from "@/components/ForensicGraph";
 import MitigationPanel from "@/components/MitigationPanel";
 import PentestModule from "@/components/PentestModule";
+import AttackSurfaceMap from "@/components/AttackSurfaceMap";
+import AdvancedTools from "@/components/AdvancedTools";
 
 export default function Home() {
   return (
@@ -19,7 +21,10 @@ export default function Home() {
         </button>
       </header>
 
-      <ForensicGraph />
+      <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '2rem', marginBottom: '2rem' }}>
+        <ForensicGraph />
+        <AttackSurfaceMap />
+      </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '2rem' }}>
         <section>
@@ -32,6 +37,8 @@ export default function Home() {
           </div>
 
           <PentestModule />
+
+          <AdvancedTools />
 
           <MitigationPanel />
           
