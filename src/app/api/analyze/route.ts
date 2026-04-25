@@ -1,47 +1,54 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import { GoogleGenerativeAI } from "@google/generative-ai";
+import { NextRequest, NextResponse } from "next/server";
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
+const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 export async function POST(req: NextRequest) {
   try {
-    const { scanData } = await req.json();
+    const { logs } = await req.json();
 
-    if (!scanData) {
-      return NextResponse.json({ error: 'No scan data provided' }, { status: 400 });
+    if (!logs || !Array.isArray(logs)) {
+      return NextResponse.json({ error: "Invalid logs provided" }, { status: 400 });
     }
-
-    if (!process.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY === 'your_api_key_here') {
-      return NextResponse.json({ 
-        error: 'Gemini API Key is not configured. Please add it to .env.local' 
-      }, { status: 501 });
-    }
-
-    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-pro' });
 
     const prompt = `
-      You are a Senior Cyber Security Architect. Analyze the following raw security scan data and provide a professional report for a CISO.
-      
-      RAW SCAN DATA:
-      ${JSON.stringify(scanData, null, 2)}
+      You are a senior security forensic analyst. Analyze the following security logs and identify potential threats, anomalies, or suspicious patterns.
+      For each log entry or cluster of entries, provide:
+      1. A risk score (0-100).
+      2. A brief analysis of the activity.
+      3. MITRE ATT&CK mapping if applicable.
+      4. Recommended mitigation steps.
 
-      Please structure your response in clear sections:
-      1. **Executive Summary**: A high-level overview of the security posture and the most critical risks discovered.
-      2. **Risk Analysis**: A breakdown of specific vulnerabilities and their potential impact on business operations.
-      3. **Remediation Plan**: A step-by-step, prioritized technical and organizational plan to mitigate the risks.
-      4. **Conclusion**: Final assessment.
+      Logs:
+      ${JSON.stringify(logs.map(l => ({ id: l.id, message: l.message, source: l.source })))}
 
-      Use professional, concise language. Format the output with clear Markdown headers.
+      Return the analysis in a structured JSON format:
+      {
+        "analyses": [
+          {
+            "id": "log_id",
+            "riskScore": number,
+            "analysis": "string",
+            "mitreAttack": "string (optional)",
+            "mitigation": "string"
+          }
+        ],
+        "summary": "overall summary of the batch"
+      }
     `;
 
     const result = await model.generateContent(prompt);
     const response = await result.response;
     const text = response.text();
+    
+    // Attempt to parse the JSON from the markdown response
+    const jsonMatch = text.match(/\{[\s\S]*\}/);
+    const analysisData = jsonMatch ? JSON.parse(jsonMatch[0]) : { analyses: [], summary: "Failed to parse analysis" };
 
-    return NextResponse.json({ analysis: text });
-
-  } catch (error: any) {
-    console.error('AI Analysis Error:', error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json(analysisData);
+  } catch (error) {
+    console.error("AI Analysis Error:", error);
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }
